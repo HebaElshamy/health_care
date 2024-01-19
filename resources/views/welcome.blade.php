@@ -46,13 +46,13 @@
                                     <li class="nav-item">
                                         <a class="nav-link" style="font-size: 25px;" href="{{route('patient.search')}}">مريض</a>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a class="nav-link" style="font-size: 25px;" href="{{route('doctor.login_form')}}">طبيب</a>
                                     </li>
                                     <li class="nav-item active">
 
                                         <a class="nav-link" style="font-size: 25px;" href="{{route('admin.login_form')}}">أدارة</a>
-                                    </li>
+                                    </li> --}}
 
                                 </ul>
                             </div>

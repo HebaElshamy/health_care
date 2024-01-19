@@ -22,9 +22,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 //auth
 Route::get('/admin/login', [AdminController::class, 'login_form'])->name('admin.login_form');
 Route::post('/login', [AdminController::class, 'login'])->name('admin.login');
@@ -66,7 +66,8 @@ Route::middleware(['check.doctor'])->group(function () {
 });
 Route::controller(AuthPatientController::class)->group(function () {
     Route::middleware(['guest'])->group(function () {
-        Route::get('/patient/search', 'search')->name('patient.search');
+        // Route::get('/patient/search', 'search')->name('patient.search');
+        Route::get('/', 'search')->name('patient.search');
         Route::post('/patient/search', 'search_no_id')->name('patient.search.id');
         Route::get('/patient/login', 'login_form')->name('patient.login_form');
         Route::post('/patient/login', 'login')->name('patient.login');
@@ -81,6 +82,7 @@ Route::controller(AuthPatientController::class)->group(function () {
         Route::get('/patient/dashboard', 'index')->name('patient.home');
         Route::get('/patient/new_booking', 'new_booking')->name('patient.new.booking');
         Route::post('/patient/descroption', 'add_descroption')->name('patient.descroption');
+        Route::post('/patient/sensor', 'add_sensor')->name('patient.sensor');
         Route::post('/patient/logout', 'logout')->name('patient.logout');
 
     });

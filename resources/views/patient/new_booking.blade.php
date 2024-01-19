@@ -21,9 +21,9 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header ">
-                            <h5 class="card-title text-right float-left text-bold">اكتب الشكوي</h5>
+                            <h5 class="card-title text-right float-right text-bold">اكتب الشكوي</h5>
 
-                            <div class="card-tools float-right">
+                            <div class="card-tools float-left">
 
                                 <h5 class="card-title text-right float-left text-bold">
                                     @php
@@ -41,7 +41,7 @@
 
                             <div class="alert alert-danger">
                                 <ul>
-                                    <li class="error_desc"></li>
+                                    <li class="error_desc text-right"></li>
                                 </ul>
                             </div>
 
@@ -83,8 +83,69 @@
                         </div>
                         <!-- /.card-footer -->
                     </div>
+
                     <!-- /.card -->
                 </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header ">
+                            <h5 class="card-title text-right float-right text-bold">اكتب الشكوي</h5>
+
+                            <div class="card-tools float-left">
+
+
+                            </div>
+
+                        </div>
+                        {{-- <div class="card-header error_header d-none">
+
+                            <div class="alert alert-danger">
+                                <ul>
+                                    <li class="error_desc text-right"></li>
+                                </ul>
+                            </div>
+
+                        </div> --}}
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+
+                                    <form action="{{route('patient.sensor') }}" method="post">
+                                        @csrf
+                                        <div class="form-group">
+                                        </div>
+
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- ./card-body -->
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-3 col-6">
+
+                                    <div class="description-block border-right">
+                                        <a href="#" class="btn btn-sm btn-info float-left next_data text-bold" id="btnSendRequest">
+                                            اخذ قياس درجة الحرارة </a>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                </form>
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+
+                    <!-- /.card -->
+                </div>
+               
                 <!-- /.col -->
             </div>
         </div>
@@ -123,6 +184,24 @@
 
         });
     });
+  
 });
+</script>
+<script>
+    $(document).ready(function(){
+            $("#btnSendRequest").click(function(){
+                $.ajax({
+                    url: "{{ route('patient.sensor') }}",
+                    type: "POST",
+                    data: {_token: "{{ csrf_token() }}"},
+                    success: function(response){
+                        console.log(response);
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            });
+        });
 </script>
 @endsection

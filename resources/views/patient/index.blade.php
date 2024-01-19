@@ -15,7 +15,7 @@
             <!-- /.content-header -->
 
             <!-- Main content -->
-            <section class="content">
+            {{-- <section class="content">
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
@@ -88,7 +88,7 @@
 
 
                 </div><!-- /.container-fluid -->
-            </section>
+            </section> --}}
             <!-- /.content -->
         </div>
 @endsection

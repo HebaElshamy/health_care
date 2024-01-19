@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
+
 
 class AuthPatientController extends Controller
 {
@@ -131,6 +133,18 @@ class AuthPatientController extends Controller
             ]);
         }
 
+    }
+    public function add_sensor(Request $request){
+        // CSRF token for Laravel form submission
+        $token = $request->input('_token');
+
+        // Send a POST request to Arduino
+        $response = Http::post('http://192.168.1.10/heart', ['_token' => $token]);
+
+        // Get the response from Arduino
+        $arduinoResponse = $response->body();
+
+        return response()->json(['success' => true, 'arduino_response' => $arduinoResponse]);
     }
 
 
