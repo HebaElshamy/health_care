@@ -16,6 +16,12 @@ class Patient extends Authenticatable
         "no_id",
         "password",
         "phone",
+        
 
     ];
+    public function appointments()
+    {
+        return $this->hasMany(NewBooking::class, 'patient_id');
+    }
 }
+

@@ -25,8 +25,9 @@ class AuthPatientController extends Controller
     public function search_no_id(Request $request){
         // dd($request->all());
         $request->validate([
-            'no_id' => 'required|numeric',
+            'no_id' => 'required|numeric|digits:10',
         ], [
+            'no_id.digits' => 'يجب أن يحتوي رقم الهوية على 10 أرقام.',
             'no_id.required' => 'حقل رقم الهوية مطلوب.',
             'no_id.numeric' => 'يجب أن يكون رقم الهوية قيمة رقمية.',
         ]);
@@ -50,9 +51,8 @@ class AuthPatientController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request->all());
         $validatedData= $request->validate([
-            'no_id' => 'required|numeric|unique:patients,no_id',
+            'no_id' => 'required|numeric|digits:10|unique:patients,no_id',
             'name' => 'required|string',
             'age' => 'required|numeric',
             'phone' => 'required|numeric',
@@ -61,6 +61,8 @@ class AuthPatientController extends Controller
             'no_id.required' => 'حقل رقم الهوية مطلوب.',
             'no_id.numeric' => 'يجب أن يكون رقم الهوية قيمة رقمية.',
             'no_id.unique' => 'رقم الهوية مستخدم بالفعل.',
+            'no_id.digits' => 'يجب أن يحتوي رقم الهوية على 10 أرقام.',
+
             'name.required' => 'حقل الاسم مطلوب.',
             'name.string' => 'يجب أن يكون الاسم قيمة نصية.',
             'age.required' => 'حقل العمر مطلوب.',
@@ -78,18 +80,15 @@ class AuthPatientController extends Controller
         if ($patient) {
             auth()->guard('patients')->login($patient);
 
-            return redirect()->route('patient.home')->with('message', 'مرحباً بك ');
+            return redirect()->route('patient.new.booking')->with('message', 'مرحباً بك ');
 
         }
-        //  else {
-        //     dd('فشل في إنشاء المريض');
-        // }
     }
     public function login(Request $request)
     {
 
         if (auth()->guard('patients')->attempt(['no_id' => $request->no_id, 'password' => $request->password])) {
-            return redirect()->route('patient.home')->with('message', 'مرحباً بك ');
+            return redirect()->route('patient.new.booking')->with('message', 'مرحباً بك ');
         }
         return redirect()->back()->with('error', 'البريد الإلكترونى او كلمة المرور خطأ');
     }
@@ -106,20 +105,44 @@ class AuthPatientController extends Controller
     public function new_booking(){
         return view('patient.new_booking');
     }
-    public function add_descroption(Request $request)
+    public function add_data(Request $request)
     {
+        // dd($request->all());
+
         $validator = Validator::make($request->all(), [
-            'value' => 'required|string',
+            'description' => 'required|string',
+            'temp' => 'required|numeric',
+            'heart' => 'required|numeric',
+            'spo2' => 'required|numeric',
+        ], [
+            'description.required' => 'حقل الوصف مطلوب',
+            'temp.required' => 'حقل الحرارة مطلوب',
+            'temp.numeric' => 'يجب أن يكون حقل الحرارة رقمًا',
+            'heart.required' => 'حقل النبض مطلوب',
+            'heart.numeric' =>' يجب أن يكون حقل النبض رقمًا',
+            'spo2.required' => 'حقل الاكسجين مطلوب',
+            'spo2.numeric' =>' يجب أن يكون حقل الاكسجين رقمًا',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'st'=>1,
-                'message' => 'حقل الشكوي مطلوب']);
+                'st' => 1,
+                'message' => $validator->errors()->all()
+            ]);
         }
+        if(($request->input('heart') >=90 && $request->input('heart')<100) && ($request->input('temp') >=36.5 && $request->input('temp') <= 37.5)){
+            $status =0;
+        }else{
+            $status = 1;
+        }
+
         $new_booking = NewBooking::create([
             'patient_id' => auth()->guard('patients')->user()->id,
-            'descroption' => $request->input('value'),
+            'description' => $request->input('description'),
+            'temp' => $request->input('temp'),
+            'heart' => $request->input('heart'),
+            'spo2' => $request->input('spo2'),
+            'status' => $status,
         ]);
         if ($new_booking) {
             return response()->json([
@@ -134,6 +157,18 @@ class AuthPatientController extends Controller
         }
 
     }
+    public function confirm(){
+        return view('patient.confirm_booking');
+    }
+    public function done(){
+        return response()->json(['status' => 'success']);
+    }
+    public function done_bye(){
+        Auth::logout();
+
+
+        return view('patient.done_bye');
+    }
     public function add_sensor(Request $request){
         // CSRF token for Laravel form submission
         $token = $request->input('_token');
@@ -145,6 +180,28 @@ class AuthPatientController extends Controller
         $arduinoResponse = $response->body();
 
         return response()->json(['success' => true, 'arduino_response' => $arduinoResponse]);
+    }
+    public function heart(){
+        // Send a GET request to Arduino
+        $response = Http::get('http://192.168.8.92/heart');
+        // $response = Http::get('http://192.168.8.92/temp');
+
+        // Get the response from Arduino
+        $arduinoResponse = $response->body();
+
+        return response()->json(['success' => true, 'arduino_response' => $arduinoResponse]);
+
+    }
+    public function temp(){
+        // Send a GET request to Arduino
+        // $response = Http::get('http://192.168.8.92/heart');
+        $response = Http::get('http://192.168.8.92/temp');
+
+        // Get the response from Arduino
+        $arduinoResponse = $response->body();
+
+        return response()->json(['success' => true, 'arduino_response' => $arduinoResponse]);
+
     }
 
 

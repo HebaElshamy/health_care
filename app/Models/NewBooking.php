@@ -11,9 +11,14 @@ class NewBooking extends Model
     protected $fillable = [
         "patient_id",
         "doctor_id",
-        "sensor1",
-        "sensor2",
-        "sensor3",
-        "descroption",
+        "description",
+        "temp",
+        "heart",
+        "spo2",
+        "status",
     ] ;
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
 }

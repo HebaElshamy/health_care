@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('new_bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->double('sensor1')->nullable();
-            $table->double('sensor2')->nullable();
-            $table->double('sensor3')->nullable();
-            $table->text('descroption')->nullable();
+            $table->double('temp');
+            $table->double('heart');
+            $table->double('spo2');
+            $table->string('status')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
