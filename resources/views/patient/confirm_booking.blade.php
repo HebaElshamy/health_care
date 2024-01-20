@@ -193,7 +193,7 @@
     e.preventDefault();
     $.ajax({
     type: "GET",
-    url: "http://localhost/Health-Care-Center/public/patient/done",
+    url: "{{ route('patient.done') }}",
     success: function(response) {
     window.location.href = '{{ route("patient.done.bye") }}';
     },

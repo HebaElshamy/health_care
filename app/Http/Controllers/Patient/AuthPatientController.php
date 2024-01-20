@@ -130,7 +130,7 @@ class AuthPatientController extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
-        if(($request->input('heart') >=90 && $request->input('heart')<100) && ($request->input('temp') >=36.5 && $request->input('temp') <= 37.5)){
+        if(($request->input('spo2') >=90 && $request->input('spo2')<100) && ($request->input('temp') >=36.5 && $request->input('temp') <= 37.5)){
             $status =0;
         }else{
             $status = 1;

@@ -347,7 +347,7 @@ error_header =>d-none
         // console.log(temp)
         $.ajax({
         type: "POST",
-        url: "http://localhost/Health-Care-Center/public/patient/add_data",
+        url: "{{ route('patient.add.data') }}",
         data: {
         description: description,
         heart: heart,
