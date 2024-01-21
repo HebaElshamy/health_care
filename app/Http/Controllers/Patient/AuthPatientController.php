@@ -10,15 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client;
 
 
 class AuthPatientController extends Controller
 {
     //
-    public function index(){
 
-        return view("patient.index");
-    }
+
+
+
     public function search(){
         return view("patient.auth.search_id");
     }
@@ -130,10 +131,42 @@ class AuthPatientController extends Controller
                 'message' => $validator->errors()->all()
             ]);
         }
+        $twilio_sid = env("TWILIO_SID");
+        $twilio_token = env("TWILIO_AUTH_TOKEN");
+        $twilio_whatsapp_number = env("TWILIO_WHATSAPP_NUMBER");
         if(($request->input('spo2') >=90 && $request->input('spo2')<100) && ($request->input('temp') >=36.5 && $request->input('temp') <= 37.5)){
             $status =0;
+            $message = auth()->guard('patients')->user()->name . " حالة عادية";
+            $recipientNumber = "";
+            $twilio = new Client($twilio_sid, $twilio_token);
+            try {
+                $message = $twilio->messages->create(
+                    $recipientNumber,
+                    [
+                        "from" => $twilio_whatsapp_number,
+                        "body" => $message,
+                    ]
+                );
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }else{
             $status = 1;
+            $message = auth()->guard('patients')->user()->name . " حالة حرجة";
+            $recipientNumber = "";
+            $twilio = new Client($twilio_sid, $twilio_token);
+            try {
+                $message = $twilio->messages->create(
+                    $recipientNumber,
+                    [
+                        "from" => $twilio_whatsapp_number,
+                        "body" => $message,
+                    ]
+                );
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }
 
         $new_booking = NewBooking::create([

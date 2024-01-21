@@ -26,7 +26,7 @@ Route::controller(AuthPatientController::class)->group(function () {
 
     });
     Route::middleware(['check.patient'])->group(function () {
-        Route::get('/patient/dashboard', 'index')->name('patient.home');
+        // Route::get('/patient/dashboard', 'index')->name('patient.home');
         Route::get('/patient/new_booking', 'new_booking')->name('patient.new.booking');
         Route::post('/patient/add_data', 'add_data')->name('patient.add.data');
         Route::get('/patient/confirm', 'confirm')->name('patient.confirm');
